@@ -1,0 +1,504 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "array",
+  "title": "The Root Schema",
+  "items": {
+    "$id": "#/items",
+    "type": "object",
+    "title": "The Items Schema",
+    "required": [
+      "KEY_CHK_DCN_NBR",
+      "CLM_TYPE_CD",
+      "DTL_LINE_NBR",
+      "SRVC_FROM_DT",
+      "SRVC_THRU_DT",
+      "PAT_MBR_CD",
+      "PROV_NM",
+      "PROV_SCNDRY_NM",
+      "icdPrimaryCds",
+      "PROV_TAX_ID",
+      "SBSCRBR_CERTFN_1_NBR",
+      "SBSCRBR_CERTFN_2_NBR",
+      "SBSCRBR_CERTFN_3_NBR",
+      "CURNT_QUE_UNIT_NBR",
+      "claimDetails"
+    ],
+    "properties": {
+      "KEY_CHK_DCN_NBR": {
+        "$id": "#/items/properties/KEY_CHK_DCN_NBR",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 11,
+        "title": "The Key_chk_dcn_nbr Schema",
+        "examples": [
+          "1234C03894"
+        ],
+        "pattern": "^([A-Za-z0-9]*)$"
+      },
+      "CLM_TYPE_CD": {
+        "$id": "#/items/properties/CLM_TYPE_CD",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2,
+        "title": "The CLM_TYPE_CD Schema",
+        "examples": [
+          "12"
+        ],
+        "pattern": "^([A-Za-z0-9]*)$"
+      },
+      "DTL_LINE_NBR": {
+        "$id": "#/items/properties/DTL_LINE_NBR",
+        "type": "string",
+        "title": "The DTL_LINE_NBR Schema",
+        "minLength": 1,
+        "maxLength": 2,
+        "examples": [
+          "AB"
+        ],
+        "pattern": "^([A-Za-z0-9]*)$"
+      },
+      "SRVC_FROM_DT": {
+        "$id": "#/items/properties/SRVC_FROM_DT",
+        "type": "string",
+        "title": "The SRVC_FROM_DT Schema",
+        "default": "2019-01-01",
+        "examples": [
+          "2019-02-02"
+        ],
+        "pattern": "^(18|19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(18|19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|[12][0-9]|30)|(18|19|20)[0-9]{2}[-](02)[-](0[1-9]|1[0-9]|2[0-8])|(((18|19|20)(04|08|[2468][048]|[13579][26]))|2000)[-](02)[-]29$"
+      },
+      "SRVC_THRU_DT": {
+        "$id": "#/items/properties/SRVC_THRU_DT",
+        "type": "string",
+        "title": "The SRVC_THRU_DT Schema",
+        "default": "2019-01-01",
+        "examples": [
+          "2019-02-02"
+        ],
+        "pattern": "^(18|19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(18|19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|[12][0-9]|30)|(18|19|20)[0-9]{2}[-](02)[-](0[1-9]|1[0-9]|2[0-8])|(((18|19|20)(04|08|[2468][048]|[13579][26]))|2000)[-](02)[-]29$"
+      },
+      "PAT_MBR_CD": {
+        "$id": "#/items/properties/PAT_MBR_CD",
+        "type": "number",
+        "maximum": 99,
+        "minimum": -99,
+        "title": "The PAT_MBR_CD Schema",
+        "examples": [
+          "22"
+        ],
+        "pattern": "^([0-9]*)$"
+      },
+      "PROV_NM": {
+        "$id": "#/items/properties/PROV_NM",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 25,
+        "title": "The PROV_NM Schema",
+        "default": " ",
+        "examples": [
+          "Sasi"
+        ],
+        "pattern": "^([A-Za-z0-9 ]*)$"
+      },
+      "PROV_SCNDRY_NM": {
+        "$id": "#/items/properties/PROV_SCNDRY_NM",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 25,
+        "title": "The PROV_SCNDRY_NM Schema",
+        "examples": [
+          "*",
+          "SAMARITAN HOSPITAL"
+        ],
+        "pattern": "^([A-Za-z0-9* ]*)$"
+      },
+      "icdPrimaryCds": {
+        "$id": "#/items/properties/icdPrimaryCds",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["ICD_CD"],
+          "properties": {
+            "ICD_CD": {
+              "$id": "#/items/properties/icdPrimaryCds/properties/ICD_CD",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10
+            },
+            "limitClass": {
+              "$id": "#/items/properties/icdPrimaryCds/properties/limitClass",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 0
+              },
+              "minItems": 0,
+              "maxItems": 3
+            }
+          }
+        },
+        "minItems": 1,
+        "maxItems": 5
+      },
+      "ICD_CDS": {
+        "$id": "#/items/properties/ICD_CDS",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 10
+        },
+        "minItems": 1,
+        "maxItems": 20,
+        "title": "The ICD_CD Schema",
+        "examples": [
+          [
+            "Z3801",
+            "P220",
+            "P612",
+            "P711",
+            "P284"
+          ]
+        ],
+        "pattern": "^(.*)$"
+      },
+      "PROV_TAX_ID": {
+        "$id": "#/items/properties/PROV_TAX_ID",
+        "type": "string",
+        "title": "The PROV_TAX_ID Schema",
+        "default": "",
+        "minLength": 1,
+        "maxLength": 9,
+        "examples": [
+          "AS1245F9S"
+        ],
+        "pattern": "^([A-Za-z0-9]*)$"
+      },
+      "SBSCRBR_CERTFN_1_NBR": {
+        "$id": "#/items/properties/SBSCRBR_CERTFN_1_NBR",
+        "type": "string",
+        "title": "The SBSCRBR_CERTFN_1_NBR Schema",
+        "default": "",
+        "minLength": 1,
+        "maxLength": 3,
+        "examples": [
+          "AS1"
+        ],
+        "pattern": "^([A-Za-z0-9]*)$"
+      },
+      "SBSCRBR_CERTFN_2_NBR": {
+        "$id": "#/items/properties/SBSCRBR_CERTFN_2_NBR",
+        "type": "string",
+        "title": "The SBSCRBR_CERTFN_2_NBR Schema",
+        "default": "",
+        "minLength": 1,
+        "maxLength": 2,
+        "examples": [
+          "AS8645fhsbd1"
+        ],
+        "pattern": "^([A-Za-z0-9]*)$"
+      },
+      "SBSCRBR_CERTFN_3_NBR": {
+        "$id": "#/items/properties/SBSCRBR_CERTFN_3_NBR",
+        "type": "string",
+        "title": "The SBSCRBR_CERTFN_3_NBR Schema",
+        "default": "",
+        "minLength": 1,
+        "maxLength": 4,
+        "examples": [
+          "AS81"
+        ],
+        "pattern": "^([A-Za-z0-9]*)$"
+      },
+      "CURNT_QUE_UNIT_NBR": {
+        "$id": "#/items/properties/CURNT_QUE_UNIT_NBR",
+        "type": "string",
+        "title": "The CURNT_QUE_UNIT_NBR Schema",
+        "minLength": 1,
+        "maxLength": 2,
+        "examples": [
+          "AS"
+        ],
+        "pattern": "^([A-Za-z0-9]*)$"
+      },
+      "claimDetails": {
+        "$id": "#/items/properties/claimDetails",
+        "type": "array",
+        "title": "The claimDetails Schema",
+        "items": {
+          "type": "object",
+          "required": [
+            "POT_CD",
+            "UM_RQRD_IND",
+            "DTL_LINE_NBR",
+            "HCFA_PT_CD",
+            "MDFR_1_CD",
+            "SRVC_FROM_DT",
+            "SRVC_TO_DT",
+            "BILLD_SRVC_UNIT_QTY",
+            "KEY_CHK_DCN_NBR",
+            "PROC_CD"
+          ],
+          "properties": {
+            "POT_CD": {
+              "$id": "#/items/properties/claimDetails/POT_CD",
+              "type": "string",
+              "title": "The POT_CD Schema",
+              "minLength": 1,
+              "maxLength": 1,
+              "examples": [
+                "1",
+                "2"
+              ],
+              "pattern": "^([A-Za-z0-9 ]*)$"
+            },
+            "UM_RQRD_IND": {
+              "$id": "#/items/properties/claimDetails/UM_RQRD_IND",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1,
+              "title": "The UM_RQRD_IND Schema",
+              "default": " ",
+              "examples": [
+                "S"
+              ],
+              "pattern": "^([A-Za-z0-9 ]*)$"
+            },
+            "DTL_LINE_NBR": {
+              "$id": "#/items/properties/DTL_LINE_NBR",
+              "type": "string",
+              "title": "The DTL_LINE_NBR Schema",
+              "minLength": 1,
+              "maxLength": 2,
+              "examples": [
+                "AB"
+              ],
+              "pattern": "^([A-Za-z0-9 ]*)$"
+            },
+            "HCFA_PT_CD": {
+              "$id": "#/items/properties/claimDetails/HCFA_PT_CD",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2,
+              "title": "The HCFA_PT_CD Schema",
+              "default": " ",
+              "examples": [
+                "SS"
+              ],
+              "pattern": "^([A-Za-z0-9 ]*)$"
+            },
+            "MDFR_1_CD": {
+              "$id": "#/items/properties/claimDetails/MDFR_1_CD",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2,
+              "title": "The MDFR_1_CD Schema",
+              "default": " ",
+              "examples": [
+                "Sa"
+              ],
+              "pattern": "^([A-Za-z0-9* ]*)$"
+            },
+            "SRVC_FROM_DT": {
+              "$id": "#/items/properties/claimDetails/SRVC_FROM_DT",
+              "type": "string",
+              "title": "The SRVC_FROM_DT Schema",
+              "default": "2019-01-01",
+              "examples": [
+                "2019-02-02"
+              ],
+              "pattern": "^(18|19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(18|19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|[12][0-9]|30)|(18|19|20)[0-9]{2}[-](02)[-](0[1-9]|1[0-9]|2[0-8])|(((18|19|20)(04|08|[2468][048]|[13579][26]))|2000)[-](02)[-]29$"
+            },
+            "SRVC_TO_DT": {
+              "$id": "#/items/properties/claimDetails/SRVC_TO_DT",
+              "type": "string",
+              "title": "The SRVC_TO_DT Schema",
+              "default": "2019-01-01",
+              "examples": [
+                "2019-02-02"
+              ],
+              "pattern": "^(18|19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(18|19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|[12][0-9]|30)|(18|19|20)[0-9]{2}[-](02)[-](0[1-9]|1[0-9]|2[0-8])|(((18|19|20)(04|08|[2468][048]|[13579][26]))|2000)[-](02)[-]29$"
+            },
+            "BILLD_SRVC_UNIT_QTY": {
+              "$id": "#/items/properties/claimDetails/BILLD_SRVC_UNIT_QTY",
+              "type": "number",
+              "title": "The BILLD_SRVC_UNIT_QTY Schema",
+              "minimum": -999,
+              "maximum": 999,
+              "examples": [
+                "999",
+                "33"
+              ],
+              "pattern": "^([0-9]*)$"
+            },
+            "KEY_CHK_DCN_NBR": {
+              "$id": "#/items/properties/KEY_CHK_DCN_NBR",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 11,
+              "title": "The Key_chk_dcn_nbr Schema",
+              "examples": [
+                "1234C03894"
+              ],
+              "pattern": "^([A-Za-z0-9]*)$"
+            },
+            "PROC_CD": {
+              "$id": "#/items/properties/claimDetails/PROC_CD",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5,
+              "title": "The PROC_CD Schema",
+              "examples": [
+                "99999"
+              ],
+              "pattern": "^([A-Za-z0-9]*)$"
+            },
+            "UM_PROV_SQNC_NBR": {
+              "$id": "#/items/properties/claimDetails/UM_PROV_SQNC_NBR",
+              "type": "string",
+              "title": "The UM_PROV_SQNC_NBR Schema",
+              "default": "",
+              "maxLength": 2,
+              "examples": [
+                "AG",
+                ""
+              ],
+              "pattern": "^([A-Za-z0-9*]*)$"
+            },
+            "PN_CD": {
+              "$id": "#/items/properties/claimDetails/PN_CD",
+              "type": "string",
+              "maxLength": 4,
+              "title": "The PN_CD Schema",
+              "default": "",
+              "examples": [
+                "Sasi"
+              ],
+              "pattern": "^([A-Za-z0-9]*)$"
+            },
+            "HCPCS_CD": {
+              "$id": "#/items/properties/claimDetails/HCPCS_CD",
+              "type": "string",
+              "maxLength": 5,
+              "title": "The HCPCS_CD Schema",
+              "default": "",
+              "examples": [
+                "Sasi"
+              ],
+              "pattern": "^([A-Za-z0-9*]*)$"
+            },
+            "TOS_TYPE_CD": {
+              "$id": "#/items/properties/claimDetails/TOS_TYPE_CD",
+              "type": "string",
+              "maxLength": 8,
+              "title": "The TOS_TYPE_CD Schema",
+              "default": "",
+              "examples": [
+                "Sasi"
+              ],
+              "pattern": "^([A-Za-z0-9]*)$"
+            },
+            "UM_CASE_NBR": {
+              "$id": "#/items/properties/claimDetails/UM_CASE_NBR",
+              "type": "string",
+              "maxLength": 9,
+              "title": "The UM_CASE_NBR Schema",
+              "default": "",
+              "examples": [
+                "9"
+              ],
+              "pattern": "^([A-Za-z0-9*]*)$"
+            },
+            "BILLG_NPI": {
+              "$id": "#/items/properties/BILLG_NPI",
+              "type": "string",
+              "maxLength": 10,
+              "title": "The BILLG_NPI Schema",
+              "default": "",
+              "examples": [
+                "Sasi"
+              ],
+              "pattern": "^([A-Za-z0-9]*)$"
+            }
+          }
+        },
+        "ITS_HOME_IND": {
+          "$id": "#/items/properties/ITS_HOME_IND",
+          "type": "string",
+          "title": "The ITS_HOME_IND Schema",
+          "default": "",
+          "maxLength": 5,
+          "examples": [
+            "1",
+            "null"
+          ],
+          "pattern": "^([A-Za-z0-9]*)$"
+        },
+        "ITS_PARG_PROV_IND": {
+          "$id": "#/items/properties/ITS_PARG_PROV_IND",
+          "type": "string",
+          "title": "The ITS_PARG_PROV_IND Schema",
+          "default": "",
+          "maxLength": 5,
+          "examples": [
+            "A"
+          ],
+          "pattern": "^([A-Za-z0-9]*)$"
+        },
+        "BYPS_CDS": {
+          "$id": "#/items/properties/BYPS_CDS",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 2
+          },
+          "maxItems": 5,
+          "title": "The BYPS_CDS Schema",
+          "examples": [
+            [
+              "Z3",
+              "20"
+            ]
+          ],
+          "pattern": "^([A-Za-z0-9])$"
+        },
+        "ITS_ORGNL_SCCF_NEW_NBR": {
+          "$id": "#/items/properties/ITS_ORGNL_SCCF_NEW_NBR",
+          "type": "string",
+          "title": "The ITS_ORGNL_SCCF_NEW_NBR Schema",
+          "default": "",
+          "maxLength": 17,
+          "examples": [
+            "AGAWVXG1h34681ucy"
+          ],
+          "pattern": "^([A-Za-z0-9]*)$"
+        },
+        "UM_PROV_SQNC_NBR": {
+          "$id": "#/items/properties/UM_PROV_SQNC_NBR",
+          "type": "string",
+          "title": "The UM_PROV_SQNC_NBR Schema",
+          "default": "",
+          "maxLength": 2,
+          "examples": [
+            "AG",
+            ""
+          ],
+          "pattern": "^([A-Za-z0-9]*)$"
+        },
+        "TAX_LIC_SPLTYCDE": {
+          "$id": "#/items/properties/TAX_LIC_SPLTYCDE",
+          "type": "string",
+          "maxLength": 1,
+          "title": "The TAX_LIC_SPLTYCDE Schema",
+          "default": "",
+          "examples": [
+            "S"
+          ],
+          "pattern": "^([A-Za-z0-9]*)$"
+        }
+      }
+    }
+  }
+}
