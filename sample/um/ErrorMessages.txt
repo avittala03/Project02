@@ -1,6 +1,0 @@
-invalid request number:2
-'ICD_CD' is a required property
-invalid request number:3
-'-99' does not match '^([0-9]*)$'
-invalid request number:3
-'-99' is not of type 'number'
