@@ -1,0 +1,135 @@
+Step 1 - Use the following Dev ID
+	srcccpcogxbthdv /k@!5#?$gG7Z
+	
+Step 2 - Create key tab for Dev ID
+
+---------------------------------------------
+cd 
+mkdir keytabstore
+chmod 755 keytabstore
+cd keytabstore
+------------------------------------------
+
+
+ktutil
+addent -password -p srcccpcogxbthdv@DEVAD.WELLPOINT.COM -k 1 -e rc4-hmac
+ - Password for srcccpcogxbthdv@DEVAD.WELLPOINT.COM: Enter Password for your Domain ID
+addent -password -p srcccpcogxbthdv@DEVAD.WELLPOINT.COM -k 1 -e aes256-cts
+ - Password for srcccpcogxbthdv@DEVAD.WELLPOINT.COM: Enter Password for your Domain ID
+ktutil:  wkt srcccpcogxbthdv.keytab
+ktutil:  quit
+kinit srcccpcogxbthdv@DEVAD.WELLPOINT.COM -k -t srcccpcogxbthdv.keytab
+
+
+Step 3 - Dev Staging location:
+	/dv/hdfsdata/ve2/ccp/cogx/phi/no_gbd/r000/stage/
+	
+	hadoop fs -ls /dv/hdfsdata/ve2/ccp/cogx/phi/no_gbd/r000/stage/
+* The following has the sync source BDF table
+hadoop fs -ls /dv/hdfsdata/ve2/ccp/cogx/phi/no_gbd/r000/stage/gncclmp
+hadoop fs -ls /dv/hdfsdata/ve2/ccp/cogx/phi/no_gbd/r000/stage/gncdtlp
+hadoop fs -ls /dv/hdfsdata/ve2/ccp/cogx/phi/no_gbd/r000/stage/gncnatp_ea2
+	
+	
+hadoop fs -ls /dv/hdfsdata/ve2/ccp/cogx/phi/no_gbd/r000/stage/clm_wgs_gncclmp
+	
+Step 4 - Create Hive External table:
+
+beeline -u "jdbc:hive2://dwbdtest1hs2lb.wp.com:10000/default;principal=hive/_HOST@DEVAD.WELLPOINT.COM;ssl=true" 
+
+	Action 1 - Run ddl/clm_wgs_gncclmp_dev.txt
+		msck repair table dv_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp;
+		(drop the table before creation if needed: )
+		drop table dv_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp purge;
+	Action 2 - Run ddl/clm_wgs_gncdtlp_dev.txt
+		msck repair table dv_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp;
+	Action 3 - Run ddl/clm_wgs_gncnatp_ea2_dev.txt
+		msck repair table dv_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2;
+		
+Step 5 - create /Test / verify Narrow table
+ddl/create_BDFHeaderTable_dev.txt
+	select * from dv_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST limit 10 ;
+ddl/create_BDFDetailTable_dev.txt	
+	select * from dv_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST limit 10 ;
+ddl/create_BDFEA2Table_dev.txt	
+	select * from dv_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST limit 10 ;
+
+Step 6 - Property files for Wide to Narrow tables:
+------------------------
+hadoop fs -rm /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/application_dev.properties
+hadoop fs -rm /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/query_cogxHiveBDFSyncSITAll.properties
+hadoop fs -rm /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/query_cogxHiveBDFSyncSITIncremental.properties
+hadoop fs -rm /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/bin/ds-cogx-etl-2.0.7.jar
+
+hadoop fs -put  /data/01/dv/app/ve2/ccp/cogx/phi/no_gbd/r000/control/application_dev.properties  /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+hadoop fs -put  /data/01/dv/app/ve2/ccp/cogx/phi/no_gbd/r000/control/query_cogxHiveBDFSyncSITAll.properties  /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+hadoop fs -put  /data/01/dv/app/ve2/ccp/cogx/phi/no_gbd/r000/control/query_cogxHiveBDFSyncSITIncremental.properties  /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+hadoop fs -put  /data/01/dv/app/ve2/ccp/cogx/phi/no_gbd/r000/bin/ds-cogx-etl-2.0.7.jar   /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/
+
+
+hadoop fs -rm /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/hbase-site.xml
+hadoop fs -put  /data/01/dv/app/ve2/ccp/cogx/phi/no_gbd/r000/control/hbase-site.xml  /dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+	
+Step 7 - Full load for Narrow Tables
+
+spark2-submit \
+--master yarn \
+--deploy-mode cluster \
+--driver-cores 5 \
+--driver-memory 8G \
+--num-executors 50 \
+--executor-memory 20G \
+--executor-cores 4 \
+--conf spark.ui.port=5052 \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.yarn.driver.memoryOverhead=2048 \
+--conf spark.yarn.executor.memoryOverhead=9096 \
+--conf spark.network.timeout=800 \
+--conf spark.driver.maxResultSize=0 \
+--conf spark.kryoserializer.buffer.max=1024m \
+--conf spark.rpc.message.maxSize=1024 \
+--conf spark.sql.broadcastTimeout=4800 \
+--conf spark.executor.heartbeatInterval=30s \
+--conf spark.dynamicAllocation.executorIdleTimeout=180 \
+--conf spark.dynamicAllocation.initialExecutors=30 \
+--conf spark.dynamicAllocation.maxExecutors=100 \
+--conf spark.dynamicAllocation.minExecutors=30 \
+--conf spark.sql.shuffle.partitions=2200 \
+--conf hive.exec.dynamic.partition=true  \
+--conf hive.exec.max.dynamic.partitions=10000  \
+--principal srcccpcogxbthdv \
+--keytab /home/srcccpcogxbthdv/keytabstore/srcccpcogxbthdv.keytab  \
+--files /etc/alternatives/spark2-conf/yarn-conf/hive-site.xml,/opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml  \
+--conf "spark.executor.extraClassPath=/opt/cloudera/parcels/CDH/lib/hbase/lib/" \
+--conf "spark.yarn.security.tokens.hbase.enabled=true" \
+--name "COGX HBase ETL: cogx_BDF_Sync_Load - by AF35352" \
+--class com.am.cogx.etl.HiveBDFSync.CogxHiveBDFSyncDriver \
+hdfs:///dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/ds-cogx-etl-2.0.7.jar   \
+hdfs:///dv/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control dev cogxHiveBDFSyncSITAll
+
+----------------------
+--queue cdl_yarn  \
+19/07/15 16:02:08 INFO yarn.Client: Deleted staging directory hdfs://nameservicets1/user/srcccpcogxbthdv/.sparkStaging/application_1562824131263_11501
+Exception in thread "main" org.apache.hadoop.yarn.exceptions.YarnException: Failed to submit application_1562824131263_11501 to YARN : User srcccpcogxbthdv cannot submit applications to queue root.cdl_yarn
+        at org.apache.hadoop.yarn.client.api.impl.YarnClientImpl.submitApplication(YarnClientImpl.java:257)
+        at org.apache.spark.deploy.yarn.Client.submitApplication(Client.scala:178)
+        at org.apache.spark.deploy.yarn.Client.run(Client.scala:1140)
+        at org.apache.spark.deploy.yarn.YarnClusterApplication.start(Client.scala:1568)
+        at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:894)
+        at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:198)
+        at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:228)
+        at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:137)
+        at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+
+------------------------------------------
+
+https://dwbdtest1r2m.wp.com:8090/proxy/application_1562824131263_11506/
+https://dwbdtest1r1m.wp.com:8090/cluster/app/application_1562824131263_11506
+		
+Start without queue
+https://dwbdtest1r2m.wp.com:8090/proxy/application_1562824131263_11509/
+
+		
+		
+		
+		

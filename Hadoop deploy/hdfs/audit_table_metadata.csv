@@ -1,0 +1,16 @@
+table_name,table_type
+api_etg_group,target
+api_etg_group_spclty,target
+api_mbr_ppltn,target
+api_mlr_dtl,target
+api_mlr_smry,target
+ndo_fclty_cost,target
+api_prov,target
+api_prov_wrk,target
+api_qlt_group,target
+ndo_rfrl_ptrn,target
+prof_final_report,target
+ui_prfsnl_spnd_smry,target
+ndo_ehoppa_base,target
+ndo_ehoppa_base_mbr,target
+ndo_ehoppa_base_mbr_cnty,target

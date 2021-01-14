@@ -1,0 +1,9 @@
+hadoop fs -rm -R -skipTrash hdfs://nameservice1/pr/hdfsdata/vs2/pdp/pndo/phi/no_gbd/r000/inbound/RUN_ID_TABLE/*
+
+beeline -u 'jdbc:hive2://dwbdprod1r1m.wp.com:2181,dwbdprod1r2m.wp.com:2181,dwbdprod1r3m.wp.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2' -e "insert into table pr_pdppndoph_allob_r000_ou.run_id_table values(0,'API_ETG_GROUP_SPCLTY');"
+beeline -u 'jdbc:hive2://dwbdprod1r1m.wp.com:2181,dwbdprod1r2m.wp.com:2181,dwbdprod1r3m.wp.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2' -e "insert into table pr_pdppndoph_allob_r000_ou.run_id_table values(0,'API_QLT_GROUP');"
+beeline -u 'jdbc:hive2://dwbdprod1r1m.wp.com:2181,dwbdprod1r2m.wp.com:2181,dwbdprod1r3m.wp.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2' -e "insert into table pr_pdppndoph_allob_r000_ou.run_id_table values(0,'API_MBR_PPLTN');"
+beeline -u 'jdbc:hive2://dwbdprod1r1m.wp.com:2181,dwbdprod1r2m.wp.com:2181,dwbdprod1r3m.wp.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2' -e "insert into table pr_pdppndoph_allob_r000_ou.run_id_table values(0,'API_PROV');"
+beeline -u 'jdbc:hive2://dwbdprod1r1m.wp.com:2181,dwbdprod1r2m.wp.com:2181,dwbdprod1r3m.wp.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2' -e "insert into table pr_pdppndoph_allob_r000_ou.run_id_table values(0,'API_PROV_WRK');"
+beeline -u 'jdbc:hive2://dwbdprod1r1m.wp.com:2181,dwbdprod1r2m.wp.com:2181,dwbdprod1r3m.wp.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2' -e "insert into table pr_pdppndoph_allob_r000_ou.run_id_table values(0,'API_ETG_GROUP');"
+beeline -u 'jdbc:hive2://dwbdprod1r1m.wp.com:2181,dwbdprod1r2m.wp.com:2181,dwbdprod1r3m.wp.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2' -e "select * from pr_pdppndoph_allob_r000_ou.run_id_table;"

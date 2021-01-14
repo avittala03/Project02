@@ -1,0 +1,26 @@
+2018-10-23 08:13:20,910 - referral_script - INFO - Start running main program..
+2018-10-23 08:13:20,911 - referral_script - INFO - Setup pyspark..
+2018-10-23 08:38:08,248 - referral_script - INFO - Zip distance data loaded into pyspark dataframe..
+2018-10-23 08:38:15,497 - referral_script - INFO - MAD imputation completed!
+2018-10-23 08:38:15,624 - referral_script - INFO - Outer loop df created
+2018-10-23 08:38:15,825 - referral_script - INFO - Time join step Done!
+2018-10-23 08:38:16,200 - referral_script - INFO - Done __group_by_outer_loop()
+2018-10-23 08:38:16,965 - referral_script - INFO - Done __normalize_cnt()
+2018-10-23 12:02:41,841 - referral_script - INFO - Time count table done
+2018-10-23 12:24:53,590 - referral_script - INFO - Space Join Step Done!
+2018-10-23 12:24:53,880 - referral_script - INFO - Done __group_by_outer_loop()
+2018-10-23 12:24:54,558 - referral_script - INFO - Done __normalize_cnt()
+2018-10-23 13:40:45,995 - referral_script - INFO - Space count table done
+2018-10-23 13:40:46,140 - referral_script - INFO - Diagnose join step Done!
+2018-10-23 13:40:46,449 - referral_script - INFO - Done __group_by_outer_loop()
+2018-10-23 13:40:47,028 - referral_script - INFO - Done __normalize_cnt()
+2018-10-23 14:13:17,745 - referral_script - INFO - Diagnostic count table done
+2018-10-23 14:13:17,891 - referral_script - INFO - Organization join step Done!
+2018-10-23 14:13:18,170 - referral_script - INFO - Done __group_by_outer_loop()
+2018-10-23 14:13:18,748 - referral_script - INFO - Done __normalize_cnt()
+2018-10-23 14:27:07,247 - referral_script - INFO - Organization count table done
+2018-10-23 14:37:36,754 - referral_script - INFO - Phase I table done
+2018-10-23 15:20:10,654 - referral_script - INFO - NDO_REF_MOD_IMP table created!
+2018-10-23 15:22:21,439 - referral_script - INFO - exp_cnt table created
+2018-10-23 15:22:21,439 - referral_script - INFO - Start tuning implicit MOD..
+2018-10-23 15:31:58,546 - referral_script - INFO - Start tuning PCP and non-PCP ratio..

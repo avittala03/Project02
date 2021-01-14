@@ -1,0 +1,159 @@
+msck repair table ts_ccpcogxph_nogbd_r000_wk.clm_wgs_gncclmp_wrk;
+show partitions ts_ccpcogxph_nogbd_r000_wk.clm_wgs_gncclmp_wrk;
+msck repair table ts_ccpcogxph_nogbd_r000_wk.clm_wgs_gncdtlp_wrk;
+show partitions ts_ccpcogxph_nogbd_r000_wk.clm_wgs_gncdtlp_wrk;
+msck repair table ts_ccpcogxph_nogbd_r000_wk.clm_wgs_gncnatp_ea2_wrk;
+show partitions ts_ccpcogxph_nogbd_r000_wk.clm_wgs_gncnatp_ea2_wrk;
+
+Step1:
+Create the application property 
+file name : application_wk.properties
+change the inbound schema name : 
+inbound-hive-db=ts_ccpcogxph_nogbd_r000_wk
+
+Step2:
+Create the query property file - query_wk.properties
+Change the table names 
+--------------------------------
+query_clm_wgs_gncclmp=" SELECT distinct  hdr.ddc_cd_dcn as ddc_cd_dcn,    hdr.ddc_cd_dcn_cc as ddc_cd_dcn_cc,     hdr.ddc_cd_itm_cde as ddc_cd_itm_cde,     hdr.ddc_cd_clm_compl_dte as ddc_cd_clm_compl_dte,     hdr.ddc_cd_clm_pay_act_1 as ddc_cd_clm_pay_act_1,     hdr.ddc_cd_clm_pay_act_2_6 as ddc_cd_clm_pay_act_2_6,     hdr.ddc_cd_cert_nbr1 as ddc_cd_cert_nbr1,     hdr.ddc_cd_cert_nbr2 as ddc_cd_cert_nbr2,     hdr.ddc_cd_cert_nbr3 as ddc_cd_cert_nbr3,     hdr.ddc_cd_pat_mbr_cde as ddc_cd_pat_mbr_cde,     hdr.ddc_cd_grp_nbr as ddc_cd_grp_nbr,     hdr.ddc_cd_svc_from_dte as ddc_cd_svc_from_dte,     hdr.ddc_cd_svc_thru_dte as ddc_cd_svc_thru_dte,     hdr.ddc_cd_prvdr_tax_id as ddc_cd_prvdr_tax_id,     hdr.ddc_cd_prvdr_nme as ddc_cd_prvdr_nme,     hdr.ddc_cd_prvdr_sec_nme as ddc_cd_prvdr_sec_nme,     hdr.ddc_cd_prvdr_spclty_cde as ddc_cd_prvdr_spclty_cde,     hdr.ddc_cd_prvdr_lic_alpha as ddc_cd_prvdr_lic_alpha,     hdr.ddc_cd_prvdr_lic_nmrc as ddc_cd_prvdr_lic_nmrc,     hdr.ddc_cd_tot_chrg_amt as ddc_cd_tot_chrg_amt,     hdr.ddc_cd_med_rec_nbr_2 as ddc_cd_med_rec_nbr_2,     hdr.ddc_cd_med_rec_nbr as ddc_cd_med_rec_nbr,     hdr.ddc_cd_icda_cde_1 as ddc_cd_icda_cde_1,     hdr.ddc_cd_icda_cde_2 as ddc_cd_icda_cde_2,     hdr.ddc_cd_icda_cde_3 as ddc_cd_icda_cde_3,     hdr.ddc_cd_icda_cde_4 as ddc_cd_icda_cde_4,     hdr.ddc_cd_icda_cde_5 as ddc_cd_icda_cde_5,     hdr.ddc_cd_its_home_ind as ddc_cd_its_home_ind,     hdr.ddc_cd_its_orig_sccf_nbr_new as ddc_cd_its_orig_sccf_nbr_new,     hdr.ddc_cd_its_host_prvdr_ind as ddc_cd_its_host_prvdr_ind,     hdr.ddc_cd_prvdr_ind as ddc_cd_prvdr_ind,     hdr.ddc_cd_clm_type as ddc_cd_clm_type,  hdr.src_load_dtm as load_dtm     , hdr.load_ingstn_id as load_ingstn_id           FROM <<sourceDB>>.clm_wgs_gncclmp_wrk hdr   WHERE hdr.ddc_cd_itm_cde = '80'   AND hdr.ddc_cd_clm_compl_dte >= <<histDate>>  <<Header_Additional_Filter>>  "
+query_clm_wgs_gncdtlp="select  distinct  dtl.gnchiios_hclm_dcn as gnchiios_hclm_dcn,     dtl.gnchiios_hclm_item_cde as gnchiios_hclm_item_cde,     dtl.ddc_dtl_lne_nbr as ddc_dtl_lne_nbr,     dtl.ddc_dtl_icda_pntr_1 as ddc_dtl_icda_pntr_1,     dtl.ddc_dtl_prcdr_cde as ddc_dtl_prcdr_cde,     dtl.ddc_dtl_svc_cde_1_3 as ddc_dtl_svc_cde_1_3,     dtl.ddc_dtl_proc_svc_cls_1 as ddc_dtl_proc_svc_cls_1,     dtl.ddc_dtl_proc_svc_cls_2 as ddc_dtl_proc_svc_cls_2,     dtl.ddc_dtl_proc_svc_cls_3 as ddc_dtl_proc_svc_cls_3,     dtl.ddc_dtl_pcodec_hcpcs_cde as ddc_dtl_pcodec_hcpcs_cde,     dtl.ddc_dtl_blld_amt as ddc_dtl_blld_amt,     dtl.ddc_dtl_unts_occur as ddc_dtl_unts_occur,     dtl.ddc_dtl_units_occur as ddc_dtl_units_occur,     dtl.ddc_dtl_prcdr_modfr_cde as ddc_dtl_prcdr_modfr_cde,     dtl.ddc_dtl_pcodec_hcpcs_mod as ddc_dtl_pcodec_hcpcs_mod,     dtl.ddc_dtl_mod_cde_1 as ddc_dtl_mod_cde_1,     dtl.ddc_dtl_mod_cde_2 as ddc_dtl_mod_cde_2,     dtl.ddc_dtl_mod_cde_3 as ddc_dtl_mod_cde_3,     dtl.ddc_dtl_hcfa_pt_cde as ddc_dtl_hcfa_pt_cde,     dtl.ddc_dtl_pt_cde as ddc_dtl_pt_cde,     dtl.ddc_dtl_elig_expsn_amt as ddc_dtl_elig_expsn_amt,     dtl.ddc_dtl_svc_from_dte AS ddc_dtl_svc_from_dte,     dtl.ddc_dtl_svc_thru_dte AS ddc_dtl_svc_thru_dte  ,      dtl.load_ingstn_id as load_ingstn_id     from <<sourceDB>>.clm_wgs_gncdtlp_wrk dtl where dtl.gnchiios_hclm_item_cde='80'  <<Detail_Additional_Filter>> "
+query_clm_wgs_gncnatp_ea2=" SELECT  distinct EA2.ddc_nat_ea2_type_of_bill as ddc_nat_ea2_type_of_bill,   EA2.gnchiios_hclm_dcn as gnchiios_hclm_dcn,   EA2.gnchiios_hclm_dcn_cc as gnchiios_hclm_dcn_cc,   EA2.gnchiios_hclm_item_cde as   gnchiios_hclm_item_cde,   EA2.load_ingstn_id as load_ingstn_id   FROM   <<sourceDB>>.clm_wgs_gncnatp_ea2_wrk EA2   WHERE EA2.gnchiios_hclm_item_cde = '80' <<ea_Additional_Filter>> "
+--------------------------------
+
+Step3: Property files for Wide to Narrow tables:
+------------------------
+hadoop fs -rm /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/application_wk.properties
+hadoop fs -rm /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/query_wk.properties
+hadoop fs -rm /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/bin/ds-cogx-etl-2.0.9.jar
+
+hadoop fs -put  /data/01/ts/app/ve2/ccp/cogx/phi/no_gbd/r000/control/application_wk.properties  /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+hadoop fs -put  /data/01/ts/app/ve2/ccp/cogx/phi/no_gbd/r000/control/query_wk.properties  /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+hadoop fs -put  /data/01/ts/app/ve2/ccp/cogx/phi/no_gbd/r000/bin/ds-cogx-etl-2.0.9.jar   /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/
+
+------------------------------
+
+Step4: WK tables to Narrow tables
+spark2-submit \
+--master yarn \
+--deploy-mode cluster \
+--queue cdl_yarn  \
+--driver-cores 5 \
+--driver-memory 8G \
+--num-executors 50 \
+--executor-memory 20G \
+--executor-cores 4 \
+--conf spark.ui.port=5052 \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.yarn.driver.memoryOverhead=2048 \
+--conf spark.yarn.executor.memoryOverhead=9096 \
+--conf spark.network.timeout=800 \
+--conf spark.driver.maxResultSize=0 \
+--conf spark.kryoserializer.buffer.max=1024m \
+--conf spark.rpc.message.maxSize=1024 \
+--conf spark.sql.broadcastTimeout=4800 \
+--conf spark.executor.heartbeatInterval=30s \
+--conf spark.dynamicAllocation.executorIdleTimeout=180 \
+--conf spark.dynamicAllocation.initialExecutors=30 \
+--conf spark.dynamicAllocation.maxExecutors=100 \
+--conf spark.dynamicAllocation.minExecutors=30 \
+--conf spark.sql.shuffle.partitions=2200 \
+--conf hive.exec.dynamic.partition=true  \
+--conf hive.exec.max.dynamic.partitions=10000  \
+--principal srcccpcogxbthts \
+--keytab /home/srcccpcogxbthts/srcccpcogxbthts.keytab  \
+--files /etc/alternatives/spark2-conf/yarn-conf/hive-site.xml,/opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml  \
+--conf "spark.executor.extraClassPath=/opt/cloudera/parcels/CDH/lib/hbase/lib/" \
+--conf "spark.yarn.security.tokens.hbase.enabled=true" \
+--name "COGX HBase ETL: cogx_BDF_WK_Load - by af15056" \
+--class com.am.cogx.etl.HiveBDFSync.CogxHiveBDFSyncDriver \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/ds-cogx-etl-2.0.9.jar   \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control wk wk
+
+
+Step5:
+Narrow tables to Staging table:
+spark2-submit \
+--master yarn \
+--deploy-mode cluster \
+--queue cdl_yarn  \
+--driver-cores 5 \
+--driver-memory 8G \
+--num-executors 50 \
+--executor-memory 20G \
+--executor-cores 4 \
+--conf spark.ui.port=5052 \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.yarn.driver.memoryOverhead=2048 \
+--conf spark.yarn.executor.memoryOverhead=9096 \
+--conf spark.network.timeout=800 \
+--conf spark.driver.maxResultSize=0 \
+--conf spark.kryoserializer.buffer.max=1024m \
+--conf spark.rpc.message.maxSize=1024 \
+--conf spark.sql.broadcastTimeout=4800 \
+--conf spark.executor.heartbeatInterval=30s \
+--conf spark.dynamicAllocation.executorIdleTimeout=180 \
+--conf spark.dynamicAllocation.initialExecutors=30 \
+--conf spark.dynamicAllocation.maxExecutors=100 \
+--conf spark.dynamicAllocation.minExecutors=30 \
+--conf spark.sql.shuffle.partitions=2200 \
+--conf hive.exec.dynamic.partition=true  \
+--conf hive.exec.max.dynamic.partitions=10000  \
+--principal srcccpcogxbthts \
+--keytab /home/srcccpcogxbthts/srcccpcogxbthts.keytab  \
+--files /etc/alternatives/spark2-conf/yarn-conf/hive-site.xml,/opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml  \
+--conf "spark.executor.extraClassPath=/opt/cloudera/parcels/CDH/lib/hbase/lib/" \
+--conf "spark.yarn.security.tokens.hbase.enabled=true" \
+--name "COGX HBase ETL: cogx_BDF_Hive_Staging_load - by AF35352" \
+--class com.am.cogx.etl.HiveBDFHive.CogxHiveBDFHiveDriver \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/ds-cogx-etl-2.0.9.jar   \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control wk cogxHiveBDFHiveHistory 
+
+
+Step6:
+Stage hive to Hbase
+hadoop fs -put  /data/01/ts/app/ve2/ccp/cogx/phi/no_gbd/r000/control/query_cogxHiveBDFHbaseWK.properties  /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+ 
+Step7:
+Create the hbase table -
+create 'ts_hb_ccpcogx_gbd_r000_in:cogx_claims_wk', {NAME => 'c1', COMPRESSION => 'SNAPPY'}, {NUMREGIONS => 16, SPLITALGO => 'HexStringSplit', DURABILITY => 'ASYNC_WAL'}
+
+Step 7:
+spark2-submit \
+--master yarn \
+--deploy-mode cluster \
+--queue cdl_yarn  \
+--driver-cores 5 \
+--driver-memory 8G \
+--num-executors 50 \
+--executor-memory 20G \
+--executor-cores 4 \
+--conf spark.ui.port=5052 \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.yarn.driver.memoryOverhead=2048 \
+--conf spark.yarn.executor.memoryOverhead=9096 \
+--conf spark.network.timeout=800 \
+--conf spark.driver.maxResultSize=0 \
+--conf spark.kryoserializer.buffer.max=1024m \
+--conf spark.rpc.message.maxSize=1024 \
+--conf spark.sql.broadcastTimeout=4800 \
+--conf spark.executor.heartbeatInterval=30s \
+--conf spark.dynamicAllocation.executorIdleTimeout=180 \
+--conf spark.dynamicAllocation.initialExecutors=30 \
+--conf spark.dynamicAllocation.maxExecutors=100 \
+--conf spark.dynamicAllocation.minExecutors=30 \
+--conf spark.sql.shuffle.partitions=2200 \
+--conf hive.exec.dynamic.partition=true  \
+--conf hive.exec.max.dynamic.partitions=10000  \
+--principal srcccpcogxbthts \
+--keytab /home/srcccpcogxbthts/srcccpcogxbthts.keytab  \
+--files /etc/alternatives/spark2-conf/yarn-conf/hive-site.xml,/opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml  \
+--conf "spark.executor.extraClassPath=/opt/cloudera/parcels/CDH/lib/hbase/lib/" \
+--conf "spark.yarn.security.tokens.hbase.enabled=true" \
+--name "COGX HBase ETL: cogx_BDF_HBase_load_WK - by AF15056" \
+--class com.am.cogx.etl.HiveBDFHBase.CogxHiveBDFHBaseDriver \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/ds-cogx-etl-2.0.9.jar   \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control wk cogxHiveBDFHbaseWK
+
+
+
+

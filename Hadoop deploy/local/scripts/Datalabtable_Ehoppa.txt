@@ -1,0 +1,4 @@
+FACILITY_ATTRIBUTE_PROFILE
+Inpatient_Summary
+Outpatient_Summary
+Outpatient_Detail

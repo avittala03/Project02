@@ -1,0 +1,179 @@
+****************************************************************************************
+BDF Data Mockup 
+****************************************************************************************
+
+Below is the Data to be mocked up 
+
+Cert Ids	Member Code	Service From	Service to
+JF7706861	10	20190101	20190115
+GT8718036	10	20190201	20190215
+XS3874896	20	20190301	20190315
+025509455	20	20190401	20190415
+AM0486428	10	20190501	20190515
+348077509	10	20190601	20190615
+N00518542	10	20190701	20190715
+837324321	10	20190401	20190415
+298739288	10	20190401	20190415
+998568559	10	20190401	20190415
+630204045	10	20190401	20190415
+
+****************************************************************************************
+Step 1 - Club all the above 4 fields into one 
+****************************************************************************************
+
+JF7706861102019010120190115
+GT8718036102019020120190215
+XS3874896202019030120190315
+025509455202019040120190415
+AM0486428102019050120190515
+348077509102019060120190615
+N00518542102019070120190715
+837324321102019040120190415
+298739288102019040120190415
+998568559102019040120190415
+630204045102019040120190415
+
+****************************************************************************************
+Step 2 - Generate Row key 
+****************************************************************************************
+1) Open spark shell 
+Command - spark2-submit --conf spark.ui.port=7676
+
+2) Run the following 
+import org.apache.commons.codec.digest.DigestUtils
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("JF7706861102019010120190115"))).substring(0, 8)).append(String.valueOf("JF7706861102019010120190115")).toString()
+res2: String = 0a3b9e08JF7706861102019010120190115
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("GT8718036102019020120190215"))).substring(0, 8)).append(String.valueOf("GT8718036102019020120190215")).toString()
+res3: String = 3eadbb36GT8718036102019020120190215
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("XS3874896202019030120190315"))).substring(0, 8)).append(String.valueOf("XS3874896202019030120190315")).toString()
+res4: String = e847ecb7XS3874896202019030120190315
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("025509455202019040120190415"))).substring(0, 8)).append(String.valueOf("025509455202019040120190415")).toString()
+res5: String = ac4f51a4025509455202019040120190415
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("AM0486428102019050120190515"))).substring(0, 8)).append(String.valueOf("AM0486428102019050120190515")).toString()
+res6: String = f335482bAM0486428102019050120190515
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("348077509102019060120190615"))).substring(0, 8)).append(String.valueOf("348077509102019060120190615")).toString()
+res7: String = bd933814348077509102019060120190615
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("N00518542102019070120190715"))).substring(0, 8)).append(String.valueOf("N00518542102019070120190715")).toString()
+res8: String = eaa91a4fN00518542102019070120190715
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("837324321102019040120190415"))).substring(0, 8)).append(String.valueOf("837324321102019040120190415")).toString()
+res9: String = e345cbce837324321102019040120190415
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("298739288102019040120190415"))).substring(0, 8)).append(String.valueOf("298739288102019040120190415")).toString()
+res10: String = 879e872c298739288102019040120190415
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("998568559102019040120190415"))).substring(0, 8)).append(String.valueOf("998568559102019040120190415")).toString()
+res11: String = f3cf8e17998568559102019040120190415
+
+scala> new StringBuilder((DigestUtils.md5Hex(String.valueOf("630204045102019040120190415"))).substring(0, 8)).append(String.valueOf("630204045102019040120190415")).toString()
+res12: String = c9b421c8630204045102019040120190415
+
+
+****************************************************************************************
+Step 3 - Mockup Json message  
+****************************************************************************************
+
+Open Hbase shell and pick up a sample Json message for any row key, mock up the data as needed, change the load ingestion id, primary key column values and dcn if given 
+
+
+****************************************************************************************
+Step 4 - Hbase insert  
+****************************************************************************************
+
+put '<HBase_table_name>', 'row_key', '<colfamily:colname>', '<value>'
+
+
+
+{  
+   "CogxClaim":[  
+      {  
+         "header":{  
+            "KEY_CHK_DCN_NBR":"19140DF9348",
+            "KEY_CHK_DCN_ITEM_CD":"80",
+            "CLM_CMPLTN_DT":"2019-05-22",
+            "CLM_PAYMNT_ACTN_1_CD":"P",
+            "CLM_PAYMNT_ACTN_2_6_CD":"1000F",
+            "MEMBER_SSN":"83699258",
+            "PAT_MBR_CD":"10",
+            "GRP_NBR":"ITSPPO",
+            "SRVC_FROM_DT":"2019-04-26",
+            "SRVC_THRU_DT":"2019-04-26",
+            "PROV_TAX_ID":"104486001",
+            "PROV_NM":"PULLEN JO ANN C",
+            "PROV_SCNDRY_NM":"PULLEN, JOC",
+            "PROV_SPCLTY_CD":"275",
+            "PROV_LCNS_CD":"G00054941",
+            "TOTL_CHRG_AMT":"145.00",
+            "TYPE_OF_BILL_CD":"1",
+            "MDCL_RCRD_2_NBR":"",
+            "MRN_NBR":"45008119",
+            "ICD_A_CD":"Z0000",
+            "ICD_B_CD":"",
+            "ICD_C_CD":"",
+            "ICD_D_CD":"",
+            "ICD_E_CD":"",
+            "PRVDR_STATUS":"PAR",
+            "CLAIM_TYPE":"PROF",
+            "LOAD_INGSTN_ID":"20190522"
+         },
+         "details":[  
+            {  
+               "KEY_CHK_DCN_NBR":"19140DF9348",
+               "KEY_CHK_DCN_ITEM_CD":"80",
+               "CLM_CMPLTN_DT":"2019-05-22",
+               "DTL_LINE_NBR":"01",
+               "ICD_9_1_CD":"1",
+               "PROC_CD":"99396",
+               "TOS_TYPE_CD":"PRV",
+               "PROC_SRVC_CLS_1_CD":"07H",
+               "PROC_SRVC_CLS_2_CD":"41",
+               "PROC_SRVC_CLS_3_CD":"07V",
+               "HCPCS_CD":"",
+               "BILLD_CHRGD_AMT":"145.00",
+               "BILLD_SRVC_UNIT_QTY":"1",
+               "UNITS_OCR_NBR":"1.00",
+               "PROC_MDFR_CD":"",
+               "HCPCS_MDFR_CD":"",
+               "MDFR_1_CD":"",
+               "MDFR_2_CD":"",
+               "MDFR_3_CD":"",
+               "HCFA_PT_CD":"11",
+               "POT_CD":"3",
+               "ELGBL_EXPNS_AMT":"118.15",
+               "SRVC_FROM_DT_DTL":"2019-04-26",
+               "SRVC_TO_DT_DTL":"2019-04-26"
+            }
+         ]
+      }
+   ]
+}
+
+
+Step 1 - Get the existing HBase records:
+
+
+Current count: 1000, row: 00006bc8561640658312018-11-282018-11-28
+Current count: 2000, row: 0000d1d8332763303202018-11-052018-11-05
+Current count: 3000, row: 00013ec1625301407202017-12-292017-12-29
+Current count: 4000, row: 0001a40e106062148402019-02-072019-02-07
+Current count: 5000, row: 00020dc2145420225502019-04-152019-04-15
+Current count: 6000, row: 000276b7921353497202018-08-202018-08-20
+Current count: 7000, row: 0002e03e971147560202017-12-212017-12-21
+Current count: 8000, row: 000342d6801512747102018-03-122018-03-12
+Current count: 9000, row: 0003abe8621833281102017-12-292017-12-29
+Current count: 10000, row: 0004136a806173594702018-09-262018-09-26
+Current count: 11000, row: 000478a1292884214702018-11-132018-11-13
+Current count: 12000, row: 0004dc73455979671102018-10-252018-10-25
+Current count: 13000, row: 0005421890693574D102018-06-152018-06-15
+Current count: 14000, row: 0005b05e594300586302018-03-152018-03-15
+Current count: 15000, row: 0006130c830333558102019-02-272019-02-27
+Current count: 16000, row: 00067913554665937102018-06-012018-06-01
+
+
+

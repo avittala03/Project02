@@ -1,0 +1,542 @@
+
+Section 1 - Insert Header:
+======================================================================
+DCN	         Cert ID	Member Code	Service From date	Service thru date
+		(npr1,nbr2,nbr3)(hdr.ddc_cd_pat_mbr_cde ) (ddc_cd_svc_from_dte ) (ddc_cd_svc_thru_dte)
+19187AA8912	S03536801	10	5/22/2019	5/22/2019
+19188AA9893	213201910	20	5/19/2019	5/19/2019
+19167AA9918	N00469905	10	6/2/2019	6/3/2019
+19176AA8015	RAM37T927	10	6/1/2019	6/1/2019
+19189BA0054	552235348	20	5/19/2019	5/19/2019
+19192BA0191	248232597	20	6/23/2019	6/25/2019
+
+-------------------------------------
+
+Cert	Member code	Service From	Service to	DCN + Queue Code	Claim type - State
+402159450	20	20190101	20190115	DCN = 19077AL8961 ; QUEUE = 66BA34	OA- ME
+068823207	10	20190201	20190215	DCN = 19054AV2723 ; QUEUE = 66BA88	PA - KY
+612201780	10	20190301	20190315	DCN = 19206AA4578 ; QUEUE = 66BA88	PA - CA
+N00879807	20	20190401	20190415	DCN = 19133AV3122 ; QUEUE = 66BA98	OA - VA
+N00878670	20	20190501	20190515	DCN = 19170AA4575 ; QUEUE = 66BA98	IA - NY
+256609800	20	20190601	20190615	DCN = 19186AZ7973 ; QUEUE = 66BA88	IA - IN
+N00880915	10	20190701	20190715	DCN = 19195AA0451 ; QUEUE = 66BA66	SNF - IN
+
+------------------------------------------------
+
+Cert Ids	Member Code	Service From	Service to	DCN
+JF7706861	10	20190101	20190115	DCN = 19010AB9944 ; QUEUE = 66BA34
+GT8718036	10	20190201	20190215	 19198AJ2781 – Queue - F6HH96
+XS3874896	20	20190301	20190315	DCN = 19210AB8189 ; QUEUE = 66BA34
+25509455	20	20190401	20190415	DCN = 19210AB8855 ; QUEUE = 66BA88
+AM0486428	10	20190501	20190515	DCN = 19212AA0810 ; QUEUE = 1AsP96
+348077509	10	20190601	20190615	DCN = 19212AA0811 ; QUEUE = 0lsPPA
+N00518542	10	20190701	20190715	DCN = 19205AB4578 ; QUEUE = 0K00PA
+837324321	10	20190401	20190415	DCN = 19195AB4578 ; QUEUE = BEIP92
+298739288	10	20190401	20190415	 19198AH2781, Queue – COIP92
+998568559	10	20190401	20190415	 19198AH2791 Queue - D%IP92
+630204045	10	20190401	20190415	 19198AH2771 Queue D%IP92
+
+
+
+
+-------------------------------------------
+Step 1 - Get existing Header:
+
+SELECT hdr.ddc_cd_dcn as ddc_cd_dcn,
+hdr.ddc_cd_dcn_cc as ddc_cd_dcn_cc,
+hdr.ddc_cd_itm_cde as ddc_cd_itm_cde,
+hdr.ddc_cd_clm_compl_dte as ddc_cd_clm_compl_dte,
+hdr.ddc_cd_clm_pay_act_1 as ddc_cd_clm_pay_act_1,
+hdr.ddc_cd_clm_pay_act_2_6 as ddc_cd_clm_pay_act_2_6,
+hdr.ddc_cd_cert_nbr1 as ddc_cd_cert_nbr1,
+hdr.ddc_cd_cert_nbr2 as ddc_cd_cert_nbr2,
+hdr.ddc_cd_cert_nbr3 as ddc_cd_cert_nbr3,
+hdr.ddc_cd_pat_mbr_cde as ddc_cd_pat_mbr_cde,
+hdr.ddc_cd_grp_nbr as ddc_cd_grp_nbr,
+hdr.ddc_cd_svc_from_dte as ddc_cd_svc_from_dte,
+hdr.ddc_cd_svc_thru_dte as ddc_cd_svc_thru_dte,
+hdr.ddc_cd_prvdr_tax_id as ddc_cd_prvdr_tax_id,
+hdr.ddc_cd_prvdr_nme as ddc_cd_prvdr_nme,
+hdr.ddc_cd_prvdr_sec_nme as ddc_cd_prvdr_sec_nme,
+hdr.ddc_cd_prvdr_spclty_cde as ddc_cd_prvdr_spclty_cde,
+hdr.ddc_cd_prvdr_lic_alpha as ddc_cd_prvdr_lic_alpha,
+hdr.ddc_cd_prvdr_lic_nmrc as ddc_cd_prvdr_lic_nmrc,
+hdr.ddc_cd_tot_chrg_amt as ddc_cd_tot_chrg_amt,
+hdr.ddc_cd_med_rec_nbr_2 as ddc_cd_med_rec_nbr_2,
+hdr.ddc_cd_med_rec_nbr as ddc_cd_med_rec_nbr,
+hdr.ddc_cd_icda_cde_1 as ddc_cd_icda_cde_1,
+hdr.ddc_cd_icda_cde_2 as ddc_cd_icda_cde_2,
+hdr.ddc_cd_icda_cde_3 as ddc_cd_icda_cde_3,
+hdr.ddc_cd_icda_cde_4 as ddc_cd_icda_cde_4,
+hdr.ddc_cd_icda_cde_5 as ddc_cd_icda_cde_5,
+hdr.ddc_cd_its_home_ind as ddc_cd_its_home_ind,
+hdr.ddc_cd_its_orig_sccf_nbr_new as ddc_cd_its_orig_sccf_nbr_new,
+hdr.ddc_cd_its_host_prvdr_ind as ddc_cd_its_host_prvdr_ind,
+hdr.ddc_cd_prvdr_ind as ddc_cd_prvdr_ind,
+hdr.ddc_cd_clm_type as ddc_cd_clm_type,
+hdr.load_dtm as load_dtm     ,
+hdr.load_ingstn_id as load_ingstn_id           
+FROM ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST hdr limit 10;
+
+-- Download from Hue
+--https://dwbdtest1r1e.wp.com:8890/hue/editor?editor=1625172&type=hive
+
+Step 2 - Download to local:
+	C:\workstation\PADP\Project\Python_cognitiveClaim\BDF\DataInsert
+
+Step 3 - Create the following insert statement
+	- change ingestion id => 20190629
+	- add single quote for all columns except 4 columns
+			ddc_cd_tot_chrg_amt decimal(11,2) COMMENT '', 
+			ddc_cd_clm_compl_dte decimal(9,0) COMMENT '', 
+			ddc_cd_svc_from_dte decimal(9,0) COMMENT '', 
+			ddc_cd_svc_thru_dte decimal(9,0) COMMENT '',
+ 
+Step 4 - insert all data into one partition
+alter table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST drop if exists partition (load_ingstn_id = '20190627') purge;
+
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm ) values ('19187AA8912','20','80',20180118,'P','10000','S03','53','6801','10','277163M302',20190522,20190522,'592307508','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19188AA9893','20','80',20180117,'P','LUM00','213','20','1910','20','GA8039M1AG',20190519,20190519,'382084239','QUEST DIAGNOSTICS CLINICA','','L02','','',109.12,'','5596135253','J029','','','','','','','','N','PA','2018-01-18 02:21:31.036');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19167AA9918','20','80',20180120,'P','10000','N00','46','9905','10','280509C465',20190602,20190603,'954884281','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19176AA8015','20','80',20180215,'D','00000','RAM','37','T927','10','GA8039M2AC',20190601,20190601,'208281993','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19189BA0054','20','80',20180118,'D','00000','552','23','5348','20','40748A',20190519,20190519,'770568441','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19192BA0191','20','80',20180202,'D','00000','248','23','2597','20','174549M311',20190623,20190625,'381357020','HENRY FORD HEALTH SYSTEM','','','MI0','557',160,'500','HB11002791','F1010','','','','','Y','71020180311915100','P','P','OC','2018-02-02 18:37:27.094');
+
+
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19077AL8961','20','80',20180118,'P','10000','402','15','9450','20','277163M302',20190101,20190115,'592307508','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19054AV2723','20','80',20180117,'P','LUM00','068','82','3207','10','GA8039M1AG',20190201,20190215,'382084239','QUEST DIAGNOSTICS CLINICA','','L02','','',109.12,'','5596135253','J029','','','','','','','','N','PA','2018-01-18 02:21:31.036');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19206AA4578','20','80',20180120,'P','10000','612','20','1780','10','280509C465',20190301,20190315,'954884281','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19133AV3122','20','80',20180215,'D','00000','N00','87','9807','20','GA8039M2AC',20190401,20190415,'208281993','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19170AA4575','20','80',20180118,'D','00000','N00','87','8670','20','40748A',20190501,20190515,'770568441','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19186AZ7973','20','80',20180202,'D','00000','256','60','9800','20','174549M311',20190601,20190615,'381357020','HENRY FORD HEALTH SYSTEM','','','MI0','557',160,'500','HB11002791','F1010','','','','','Y','71020180311915100','P','P','OC','2018-02-02 18:37:27.094');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   values ('19195AA0451','20','80',20180118,'D','00000','N00','88','0915','10','40748A',20190701,20190715,'770568441','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+
+
+
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190701') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )   
+	values ('19010AB9944','20','80',20180118,'P','10000','JF7','70','6861','10','277163M302',20190101,20190115,'592307508','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190701') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )  
+	 values ('19198AJ2781','20','80',20180117,'P','LUM00','GT8','71','8036','10','GA8039M1AG',20190201,20190215,'382084239','QUEST DIAGNOSTICS CLINICA','','L02','','',109.12,'','5596135253','J029','','','','','','','','N','PA','2018-01-18 02:21:31.036');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190701') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )
+   values ('19210AB8189','20','80',20180120,'P','10000','XS3','87','4896','20'	,'280509C465',20190301,20190315,'954884281','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190701') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )
+   values ('19210AB8855','20','80',20180215,'D','00000','255','09','455','20','GA8039M2AC',20190301,20190315,'208281993','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+
+
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190701') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )
+   values ('19170AA4575','20','80',20180118,'D','00000','N00','87','8670','20','40748A',20190501,20190515,'770568441','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190701') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )
+   values ('19186AZ7973','20','80',20180202,'D','00000','256','60','9800','20','174549M311',20190601,20190615,'381357020','HENRY FORD HEALTH SYSTEM','','','MI0','557',160,'500','HB11002791','F1010','','','','','Y','71020180311915100','P','P','OC','2018-02-02 18:37:27.094');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST partition (load_ingstn_id = '20190701') (ddc_cd_dcn,ddc_cd_dcn_cc,ddc_cd_itm_cde,ddc_cd_clm_compl_dte,ddc_cd_clm_pay_act_1,ddc_cd_clm_pay_act_2_6,ddc_cd_cert_nbr1,ddc_cd_cert_nbr2,ddc_cd_cert_nbr3,ddc_cd_pat_mbr_cde,ddc_cd_grp_nbr,ddc_cd_svc_from_dte,ddc_cd_svc_thru_dte,ddc_cd_prvdr_tax_id,ddc_cd_prvdr_nme,ddc_cd_prvdr_sec_nme,ddc_cd_prvdr_spclty_cde,ddc_cd_prvdr_lic_alpha,ddc_cd_prvdr_lic_nmrc,ddc_cd_tot_chrg_amt,ddc_cd_med_rec_nbr_2,ddc_cd_med_rec_nbr,ddc_cd_icda_cde_1,ddc_cd_icda_cde_2,ddc_cd_icda_cde_3,ddc_cd_icda_cde_4,ddc_cd_icda_cde_5,ddc_cd_its_home_ind,ddc_cd_its_orig_sccf_nbr_new,ddc_cd_its_host_prvdr_ind,ddc_cd_prvdr_ind,ddc_cd_clm_type,load_dtm )
+   values ('19195AA0451','20','80',20180118,'D','00000','N00','88','0915','10','40748A',20190701,20190715,'770568441','MEMORIAL EKG ASSOCIATES','','675','','',8.93,'','5012314565','I2510','I2582','I252','Z955','','','','','N','PM','2018-01-18 10:05:17.115');
+
+DCN	         Cert ID	Member Code	Service From date	Service thru date
+		(npr1,nbr2,nbr3)(hdr.ddc_cd_pat_mbr_cde ) (ddc_cd_svc_from_dte ) (ddc_cd_svc_thru_dte)
+Cert Ids	Member Code	Service From	Service to	DCN
+JF7706861	10	20190101	20190115	DCN = 19010AB9944 ; QUEUE = 66BA34
+19010AB9944
+'JF7','70','6861','10'
+20190101,20190115
+GT8718036	10	20190201	20190215	 19198AJ2781 – Queue - F6HH96
+19198AJ2781
+'GT8','71','8036','10'	
+20190201,20190215
+XS3874896	20	20190301	20190315	DCN = 19210AB8189 ; QUEUE = 66BA34
+19210AB8189
+'XS3','87','4896','20'	
+20190301,20190315
+25509455	20	20190401	20190415	DCN = 19210AB8855 ; QUEUE = 66BA88
+19210AB8855
+'255','09','455','20'	
+20190401,20190415
+
+
+
+AM0486428	10	20190501	20190515	DCN = 19212AA0810 ; QUEUE = 1AsP96
+348077509	10	20190601	20190615	DCN = 19212AA0811 ; QUEUE = 0lsPPA
+N00518542	10	20190701	20190715	DCN = 19205AB4578 ; QUEUE = 0K00PA
+837324321	10	20190401	20190415	DCN = 19195AB4578 ; QUEUE = BEIP92
+298739288	10	20190401	20190415	 19198AH2781, Queue – COIP92
+998568559	10	20190401	20190415	 19198AH2791 Queue - D%IP92
+630204045	10	20190401	20190415	 19198AH2771 Queue D%IP92
+
+
+
+
+select * from  ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncclmp_cogx_TEST where load_ingstn_id = '20190629'
+ 
+Section 2 - Insert Details:
+==================================================
+line item number DCN	         Cert ID	Member Code	Service From date	Service thru date
+(ddc_dtl_lne_nbr)	(gnchiios_hclm_dcn)(No need)(no need ) (dtl.ddc_dtl_svc_from_dte ) (dtl.ddc_dtl_svc_thru_dte)
+1	19187AA8912	S03536801	10	5/22/2019	5/22/2019
+2	19187AA8912	S03536801	10	5/22/2019	5/22/2019
+
+
+1	19188AA9893	213201910	20	5/19/2019	5/19/2019
+2	19188AA9893	213201910	20	5/19/2019	5/19/2019
+3	19188AA9893	213201910	20	5/19/2019	5/19/2019
+	
+1	19167AA9918	N00469905	10	6/2/2019	6/3/2019
+1	19176AA8015	RAM37T927	10	6/1/2019	6/1/2019
+1	19189BA0054	552235348	20	5/19/2019	5/19/2019
+1	19192BA0191	248232597	20	6/23/2019	6/25/2019
+
+----------------------------------------------------------
+
+Cert	Member code	Service From	Service to	DCN + Queue Code	Claim type - State
+1 402159450	20	20190101	20190115	DCN = 19077AL8961 ; QUEUE = 66BA34	OA- ME
+2 402159450	20	20190101	20190115	DCN = 19077AL8961 ; QUEUE = 66BA34	OA- ME
+
+1 068823207	10	20190201	20190215	DCN = 19054AV2723 ; QUEUE = 66BA88	PA - KY
+2 068823207	10	20190201	20190215	DCN = 19054AV2723 ; QUEUE = 66BA88	PA - KY
+3 068823207	10	20190201	20190215	DCN = 19054AV2723 ; QUEUE = 66BA88	PA - KY
+
+1 612201780	10	20190301	20190315	DCN = 19206AA4578 ; QUEUE = 66BA88	PA - CA
+1 N00879807	20	20190401	20190415	DCN = 19133AV3122 ; QUEUE = 66BA98	OA - VA
+1 N00878670	20	20190501	20190515	DCN = 19170AA4575 ; QUEUE = 66BA98	IA - NY
+1 256609800	20	20190601	20190615	DCN = 19186AZ7973 ; QUEUE = 66BA88	IA - IN
+1 N00880915	10	20190701	20190715	DCN = 19195AA0451 ; QUEUE = 66BA66	SNF - IN
+
+----------------------------------------------------
+
+Step 1 - Get existing Details:
+select   
+dtl.gnchiios_hclm_dcn as gnchiios_hclm_dcn,
+dtl.gnchiios_hclm_item_cde as gnchiios_hclm_item_cde,
+dtl.ddc_dtl_lne_nbr as ddc_dtl_lne_nbr,
+dtl.ddc_dtl_icda_pntr_1 as ddc_dtl_icda_pntr_1,
+dtl.ddc_dtl_prcdr_cde as ddc_dtl_prcdr_cde,
+dtl.ddc_dtl_svc_cde_1_3 as ddc_dtl_svc_cde_1_3,
+dtl.ddc_dtl_proc_svc_cls_1 as ddc_dtl_proc_svc_cls_1,
+dtl.ddc_dtl_proc_svc_cls_2 as ddc_dtl_proc_svc_cls_2,
+dtl.ddc_dtl_proc_svc_cls_3 as ddc_dtl_proc_svc_cls_3,
+dtl.ddc_dtl_pcodec_hcpcs_cde as ddc_dtl_pcodec_hcpcs_cde,
+dtl.ddc_dtl_blld_amt as ddc_dtl_blld_amt,
+dtl.ddc_dtl_unts_occur as ddc_dtl_unts_occur,
+dtl.ddc_dtl_units_occur as ddc_dtl_units_occur,
+dtl.ddc_dtl_prcdr_modfr_cde as ddc_dtl_prcdr_modfr_cde,
+dtl.ddc_dtl_pcodec_hcpcs_mod as ddc_dtl_pcodec_hcpcs_mod,
+dtl.ddc_dtl_mod_cde_1 as ddc_dtl_mod_cde_1,
+dtl.ddc_dtl_mod_cde_2 as ddc_dtl_mod_cde_2,
+dtl.ddc_dtl_mod_cde_3 as ddc_dtl_mod_cde_3,
+dtl.ddc_dtl_hcfa_pt_cde as ddc_dtl_hcfa_pt_cde,
+dtl.ddc_dtl_pt_cde as ddc_dtl_pt_cde,
+dtl.ddc_dtl_elig_expsn_amt as ddc_dtl_elig_expsn_amt,
+dtl.ddc_dtl_svc_from_dte AS ddc_dtl_svc_from_dte,
+dtl.ddc_dtl_svc_thru_dte AS ddc_dtl_svc_thru_dte  ,
+dtl.load_ingstn_id as load_ingstn_id    
+from ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST dtl limit 10;
+
+-- Download from Hue
+--https://dwbdtest1r1e.wp.com:8890/hue/editor?editor=1625172&type=hive
+
+Step 2 - Download to local
+	C:\workstation\PADP\Project\Python_cognitiveClaim\BDF\DataInsert
+	xlsx and csv
+	
+Step 3 - load data:
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190627') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19187AA8912','80','01','1','0333','OPH','52I','','','77412',1916,1,1,'','','','','','22','2',1318.78,20190522,201905220);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190627') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19187AA8912','80','02','1','0333','OPH','52I','','','77412',1916,1,1,'','','','','','22','2',1318.78,20190522,20190522);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190627') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19188AA9893','80','01','1','0305','ANC','52F','528','529','',119.64,2,2,'','','','','','21','1',0,20190519,20190519);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190627') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19188AA9893','80','02','1','0305','ANC','52F','528','529','',119.64,2,2,'','','','','','21','1',0,20190519,20190519);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190627') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19188AA9893','80','03','1','0305','ANC','52F','528','529','',119.64,2,2,'','','','','','21','1',0,20190519,20190519);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190627') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19167AA9918','80','01','0','','HSV','','','','',133,0,0,'','','','','','11','3',0,20190602,20190603);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190627') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19176AA8015','80','01','1','99233','MWH','03A','NHR','','',250,1,1,'','','','','','21','1',173.16,20190601,20190601);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190627') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19189BA0054','80','01','1','J2916','PHO','01C','','','',100,10,10,'','','','','','11','3',0,20190519,20190519);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190627') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19192BA0191','80','01','1','0305','OPH','52F','528','529','85025',93,1,1,'','','','','','22','2',0,20190623,20190625);
+
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19077AL8961','80','01','1','0333','OPH','52I','','','77412',1916,1,1,'','','','','','22','2',1318.78,20190101,20190115);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19077AL8961','80','02','1','0333','OPH','52I','','','77412',1916,1,1,'','','','','','22','2',1318.78,20190101,20190115);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19054AV2723','80','01','1','0305','ANC','52F','528','529','',119.64,2,2,'','','','','','21','1',0,20190201,20190215);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19054AV2723','80','02','1','0305','ANC','52F','528','529','',119.64,2,2,'','','','','','21','1',0,20190201,20190215);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19054AV2723','80','03','1','0305','ANC','52F','528','529','',119.64,2,2,'','','','','','21','1',0,20190201,20190215);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19206AA4578','80','01','0','','HSV','','','','',133,0,0,'','','','','','11','3',0,20190301,20190315);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19133AV3122','80','01','1','99233','MWH','03A','NHR','','',250,1,1,'','','','','','21','1',173.16,20190401,20190415);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19170AA4575','80','01','1','J2916','PHO','01C','','','',100,10,10,'','','','','','11','3',0,20190501,20190515);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19186AZ7973','80','01','1','0305','OPH','52F','528','529','85025',93,1,1,'','','','','','22','2',0,20190601,20190615);
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST partition (load_ingstn_id = '20190629') (gnchiios_hclm_dcn,gnchiios_hclm_item_cde,ddc_dtl_lne_nbr,ddc_dtl_icda_pntr_1,ddc_dtl_prcdr_cde,ddc_dtl_svc_cde_1_3,ddc_dtl_proc_svc_cls_1,ddc_dtl_proc_svc_cls_2,ddc_dtl_proc_svc_cls_3,ddc_dtl_pcodec_hcpcs_cde,ddc_dtl_blld_amt,ddc_dtl_unts_occur,ddc_dtl_units_occur,ddc_dtl_prcdr_modfr_cde,ddc_dtl_pcodec_hcpcs_mod,ddc_dtl_mod_cde_1,ddc_dtl_mod_cde_2,ddc_dtl_mod_cde_3,ddc_dtl_hcfa_pt_cde,ddc_dtl_pt_cde,ddc_dtl_elig_expsn_amt,ddc_dtl_svc_from_dte,ddc_dtl_svc_thru_dte ) values  ('19195AA0451','80','01','1','0333','OPH','52I','','','77412',1916,1,1,'','','','','','22','2',1318.78,20190701,20190715);
+
+
+select * from ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST where load_ingstn_id = '20190629';
+
+select gnchiios_hclm_dcn from ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncdtlp_cogx_TEST where load_ingstn_id = '20190629';
+
+Section 3 - Insert ea2:
+==================================================
+DCN	         Cert ID	Member Code	Service From date	Service thru date
+		(No need )( no need) ( no need ) (no need)
+19187AA8912	S03536801	10	5/22/2019	5/22/2019
+19188AA9893	213201910	20	5/19/2019	5/19/2019
+19167AA9918	N00469905	10	6/2/2019	6/3/2019
+19176AA8015	RAM37T927	10	6/1/2019	6/1/2019
+19189BA0054	552235348	20	5/19/2019	5/19/2019
+19192BA0191	248232597	20	6/23/2019	6/25/2019
+====================================
+Step 1 - Get the existing data:
+
+SELECT  EA2.ddc_nat_ea2_type_of_bill as ddc_nat_ea2_type_of_bill,
+EA2.gnchiios_hclm_dcn as gnchiios_hclm_dcn,
+EA2.gnchiios_hclm_dcn_cc as gnchiios_hclm_dcn_cc,
+EA2.gnchiios_hclm_item_cde as   gnchiios_hclm_item_cde,
+EA2.load_ingstn_id as load_ingstn_id   FROM   ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST EA2   limit 10;
+
+Step 2 - insert table
+
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19187AA8912','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19188AA9893','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19167AA9918','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19176AA8015','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19189BA0054','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190627') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19192BA0191','20','80');
+
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19077AL8961','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19054AV2723','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19206AA4578','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19133AV3122','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19170AA4575','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19186AZ7973','20','80');
+insert into table ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST partition (load_ingstn_id = '20190629') (ddc_nat_ea2_type_of_bill,gnchiios_hclm_dcn,gnchiios_hclm_dcn_cc,gnchiios_hclm_item_cde) values ('1','19195AA0451','20','80');
+
+
+select * from    ts_ccpcogxph_nogbd_r000_sg.clm_wgs_gncnatp_ea2_cogx_TEST EA where load_ingstn_id = '20190629';
+
+Section 4 - insert audit table
+=============================================================
+Step 1 - Truncate Audit table:
+---------------------------------------
+beeline -u "jdbc:hive2://dwbdtest1hs2lb.wp.com:10000/default;principal=hive/_HOST@DEVAD.WELLPOINT.COM;ssl=true" 
+truncate table ts_ccpcogxph_nogbd_r000_wh.cogx_etl_audit ;
+------------------------------------------
+Step 2 - insert audit records for partition 20190627
+----------------------------------------
+insert into ts_ccpcogxph_nogbd_r000_wh.cogx_etl_audit values ('COGX HBase ETL: cogx_BDF_Hive_Staging_load - by AF35352', 'AF35352', 'local-1559749206160', '2019-06-26 09:40:09', '151 Seconds', 'completed', 0, '2019-06-26 09:40:09' )   ;
+
+select max(CAST(date_format(to_date(lastupdate),'yyyyMMdd') as INT)) from ts_ccpcogxph_nogbd_r000_wh.cogx_etl_audit where program='COGX HBase ETL: cogx_BDF_Hive_Staging_load - by AF35352' and status ='completed';
+
+hadoop fs -rm /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/query_mockInsert.properties
+hadoop fs -rm /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/application_sit.properties
+hadoop fs -rm /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/bin/ds-cogx-etl-2.0.9.jar
+
+hadoop fs -put  /data/01/ts/app/ve2/ccp/cogx/phi/no_gbd/r000/control/application_sit.properties  /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+hadoop fs -put  /data/01/ts/app/ve2/ccp/cogx/phi/no_gbd/r000/control/query_mockInsert.properties  /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+hadoop fs -put  /data/01/ts/app/ve2/ccp/cogx/phi/no_gbd/r000/bin/ds-cogx-etl-2.0.9.jar   /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/
+
+
+
+Step 3 - Run  the incremental job:
+----------------------------------------------------
+spark2-submit \
+--master yarn \
+--deploy-mode cluster \
+--queue cdl_yarn  \
+--driver-cores 5 \
+--driver-memory 8G \
+--num-executors 50 \
+--executor-memory 20G \
+--executor-cores 4 \
+--conf spark.ui.port=5052 \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.yarn.driver.memoryOverhead=2048 \
+--conf spark.yarn.executor.memoryOverhead=9096 \
+--conf spark.network.timeout=800 \
+--conf spark.driver.maxResultSize=0 \
+--conf spark.kryoserializer.buffer.max=1024m \
+--conf spark.rpc.message.maxSize=1024 \
+--conf spark.sql.broadcastTimeout=4800 \
+--conf spark.executor.heartbeatInterval=30s \
+--conf spark.dynamicAllocation.executorIdleTimeout=180 \
+--conf spark.dynamicAllocation.initialExecutors=30 \
+--conf spark.dynamicAllocation.maxExecutors=100 \
+--conf spark.dynamicAllocation.minExecutors=30 \
+--conf spark.sql.shuffle.partitions=2200 \
+--conf hive.exec.dynamic.partition=true  \
+--conf hive.exec.max.dynamic.partitions=10000  \
+--principal srcccpcogxbthts \
+--keytab /home/srcccpcogxbthts/srcccpcogxbthts.keytab  \
+--files /etc/alternatives/spark2-conf/yarn-conf/hive-site.xml,/opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml  \
+--conf "spark.executor.extraClassPath=/opt/cloudera/parcels/CDH/lib/hbase/lib/" \
+--conf "spark.yarn.security.tokens.hbase.enabled=true" \
+--name "COGX HBase ETL: cogx_BDF_Hive_Staging_load - by AF35352" \
+--class com.am.cogx.etl.HiveBDFHive.CogxHiveBDFHiveDriver \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/ds-cogx-etl-2.0.9.jar   \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control sit mockInsert
+
+-----------------------------------------------------------
+Step 4 - Verify the loading
+Spark UI:
+https://dwbdtest1r2m.wp.com:8090/proxy/application_1562824131263_15697/
+https://dwbdtest1r1m.wp.com:8090/proxy/application_1563939707779_7644/
+https://dwbdtest1r1m.wp.com:8090/proxy/application_1563939707779_7719/
+
+
+https://dwbdtest1r1m.wp.com:8090/cluster/app/application_1563939707779_7657
+select rowKey, jsonData from ts_ccpcogxph_nogbd_r000_sg.COGX_BDF_STAGING;
+Step 5 - force run:
+ 
+hadoop fs -rm /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/query_ankitTest.properties
+
+hadoop fs -put  /data/01/ts/app/ve2/ccp/cogx/phi/no_gbd/r000/control/query_ankitTest.properties  /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+
+hadoop fs -rm /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/query_ankitTestAll.properties
+
+hadoop fs -put  /data/01/ts/app/ve2/ccp/cogx/phi/no_gbd/r000/control/query_ankitTestAll.properties  /ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control/
+
+
+ ----------------------------------------------------
+spark2-submit \
+--master yarn \
+--deploy-mode cluster \
+--queue cdl_yarn  \
+--driver-cores 5 \
+--driver-memory 8G \
+--num-executors 50 \
+--executor-memory 20G \
+--executor-cores 4 \
+--conf spark.ui.port=5052 \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.yarn.driver.memoryOverhead=2048 \
+--conf spark.yarn.executor.memoryOverhead=9096 \
+--conf spark.network.timeout=800 \
+--conf spark.driver.maxResultSize=0 \
+--conf spark.kryoserializer.buffer.max=1024m \
+--conf spark.rpc.message.maxSize=1024 \
+--conf spark.sql.broadcastTimeout=4800 \
+--conf spark.executor.heartbeatInterval=30s \
+--conf spark.dynamicAllocation.executorIdleTimeout=180 \
+--conf spark.dynamicAllocation.initialExecutors=30 \
+--conf spark.dynamicAllocation.maxExecutors=100 \
+--conf spark.dynamicAllocation.minExecutors=30 \
+--conf spark.sql.shuffle.partitions=2200 \
+--conf hive.exec.dynamic.partition=true  \
+--conf hive.exec.max.dynamic.partitions=10000  \
+--principal srcccpcogxbthts \
+--keytab /home/srcccpcogxbthts/srcccpcogxbthts.keytab  \
+--files /etc/alternatives/spark2-conf/yarn-conf/hive-site.xml,/opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml  \
+--conf "spark.executor.extraClassPath=/opt/cloudera/parcels/CDH/lib/hbase/lib/" \
+--conf "spark.yarn.security.tokens.hbase.enabled=true" \
+--name "COGX HBase ETL: cogx_BDF_Hive_Staging_load - by AF35352" \
+--class com.am.cogx.etl.HiveBDFHive.CogxHiveBDFHiveDriver \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/ds-cogx-etl-2.0.7.jar   \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control sit ankitTest
+
+-----------------------------------------------------------
+
+ ----------------------------------------------------
+spark2-submit \
+--master yarn \
+--deploy-mode cluster \
+--queue cdl_yarn  \
+--driver-cores 5 \
+--driver-memory 16G \
+--num-executors 100 \
+--executor-memory 30G \
+--executor-cores 4 \
+--conf spark.ui.port=5052 \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.yarn.driver.memoryOverhead=2048 \
+--conf spark.yarn.executor.memoryOverhead=9096 \
+--conf spark.network.timeout=1800 \
+--conf spark.yarn.am.cores=3 \
+--conf spark.driver.maxResultSize=0 \
+--conf spark.kryoserializer.buffer.max=1024m \
+--conf spark.rpc.message.maxSize=1024 \
+--conf spark.sql.broadcastTimeout=4800 \
+--conf spark.executor.heartbeatInterval=30s \
+--conf spark.dynamicAllocation.executorIdleTimeout=180 \
+--conf spark.dynamicAllocation.initialExecutors=30 \
+--conf spark.dynamicAllocation.maxExecutors=100 \
+--conf spark.dynamicAllocation.minExecutors=30 \
+--conf spark.sql.shuffle.partitions=2200 \
+--conf hive.exec.dynamic.partition=true  \
+--conf hive.exec.max.dynamic.partitions=10000  \
+--principal srcccpcogxbthts \
+--keytab /home/srcccpcogxbthts/srcccpcogxbthts.keytab  \
+--files /etc/alternatives/spark2-conf/yarn-conf/hive-site.xml,/opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml  \
+--conf "spark.executor.extraClassPath=/opt/cloudera/parcels/CDH/lib/hbase/lib/" \
+--conf "spark.yarn.security.tokens.hbase.enabled=true" \
+--name "COGX HBase ETL: cogx_BDF_Hive_Staging_load - by AF35352" \
+--class com.am.cogx.etl.HiveBDFHive.CogxHiveBDFHiveDriver \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/ds-cogx-etl-2.0.7.jar   \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control sit ankitTestAll
+
+-----------------------------------------------------------
+
+https://dwbdtest1r2m.wp.com:8090/proxy/application_1562824131263_19048/
+https://dwbdtest1r1m.wp.com:8090/cluster/app/application_1562824131263_19048/
+
+
+https://dwbdtest1r2m.wp.com:8090/proxy/application_1562824131263_18853/
+https://dwbdtest1r1m.wp.com:8090/cluster/app/application_1562824131263_18853/
+
+
+https://dwbdtest1r2m.wp.com:8090/proxy/application_1562824131263_18614/jobs/
+Hadoop history
+https://dwbdtest1r1m.wp.com:8090/cluster/app/application_1562824131263_5748/
+
+
+Step 5 - Check the staging table:
+
+select * from ts_ccpcogxph_nogbd_r000_sg.COGX_BDF_STAGING limit 10;
+
+
+Step 6 - load to HBase
+
+spark2-submit \
+--master yarn \
+--deploy-mode cluster \
+--queue cdl_yarn  \
+--driver-cores 5 \
+--driver-memory 8G \
+--num-executors 50 \
+--executor-memory 20G \
+--executor-cores 4 \
+--conf spark.ui.port=5052 \
+--conf spark.yarn.maxAppAttempts=1 \
+--conf spark.yarn.driver.memoryOverhead=2048 \
+--conf spark.yarn.executor.memoryOverhead=9096 \
+--conf spark.network.timeout=800 \
+--conf spark.driver.maxResultSize=0 \
+--conf spark.kryoserializer.buffer.max=1024m \
+--conf spark.rpc.message.maxSize=1024 \
+--conf spark.sql.broadcastTimeout=4800 \
+--conf spark.executor.heartbeatInterval=30s \
+--conf spark.dynamicAllocation.executorIdleTimeout=180 \
+--conf spark.dynamicAllocation.initialExecutors=30 \
+--conf spark.dynamicAllocation.maxExecutors=100 \
+--conf spark.dynamicAllocation.minExecutors=30 \
+--conf spark.sql.shuffle.partitions=2200 \
+--conf hive.exec.dynamic.partition=true  \
+--conf hive.exec.max.dynamic.partitions=10000  \
+--principal srcccpcogxbthts \
+--keytab /home/srcccpcogxbthts/srcccpcogxbthts.keytab  \
+--files /etc/alternatives/spark2-conf/yarn-conf/hive-site.xml,/opt/cloudera/parcels/CDH/lib/hbase/conf/hbase-site.xml  \
+--conf "spark.executor.extraClassPath=/opt/cloudera/parcels/CDH/lib/hbase/lib/" \
+--conf "spark.yarn.security.tokens.hbase.enabled=true" \
+--name "COGX HBase ETL: cogx_BDF_HBase_load - by AF35352" \
+--class com.am.cogx.etl.HiveBDFHBase.CogxHiveBDFHBaseDriver \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000//bin/ds-cogx-etl-2.0.9.jar   \
+hdfs:///ts/hdfsapp/ve2/ccp/cogx/phi/no_gbd/r000/control sit ankitTestAll
+
+
+---------------------------------------------------------
+ https://dwbdtest1r2m.wp.com:8090/proxy/application_1562824131263_19111/
+ 
+ https://dwbdtest1r1m.wp.com:8090/proxy/application_1563939707779_7766/
+ 
+ 
+
+Step 7 - check hbase 
+
+get 'ts_hb_ccpcogx_nogbd_r000_in:cogx_claims_YasinTest' , '3912d4da213201910202019-05-192019-05-19'
+get 'ts_hb_ccpcogx_nogbd_r000_in:cogx_claims' , '121a3f44068823207102019-02-012019-02-15' 
+
+     ts_hb_ccpcogx_nogbd_r000_in
+ b0bd9733552235348202019-05-192019-05-19 
+ 8f2d94d5248232597202019-06-232019-06-25 
+ 6ca789c4RAM37T927102019-06-012019-06-01 
+ 4cd15f11N00469905102019-06-022019-06-03
+ 3912d4da213201910202019-05-192019-05-19 
+ 2d668b74S03536801102019-05-222019-05-22 
+ 
+ 

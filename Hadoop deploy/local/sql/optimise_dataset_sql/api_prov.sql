@@ -1,0 +1,2 @@
+API_PROV_QUERY=SELECT	BKBN_SNAP_YEAR_MNTH_NBR,ST_CD,LOB_ID,PROD_ID,PROV_TAX_ID,PROV_TAX_NM,NPI,AGRGTN_TYPE_CD,PROV_NM,SPCLTY_ID,PRIMARY_SPECIALITY_CODE,SUBMRKT_CD,SUBMRKT_DESC From API_PROV_WRK
+API_PROV_INSERTQUERY=select bkbn_snap_year_mnth_nbr,st_cd,lob_id,prod_id,prov_tax_id,prov_tax_nm,npi,agrgtn_type_cd,prov_nm,spclty_id,primary_speciality_code,submrkt_cd,submrkt_desc,run_id from API_PROV

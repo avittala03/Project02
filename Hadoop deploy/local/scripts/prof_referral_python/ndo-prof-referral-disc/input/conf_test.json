@@ -1,0 +1,49 @@
+{
+    "pyspark": {
+        "enviornment_variables": {
+            "PYSPARK_DRIVER_PYTHON": "/app/hca/adva/mtbox/py2-mtbox-develop/bin/python"
+            , "PYSPARK_PYTHON": "/opt/cloudera/parcels/Anaconda/bin/python"
+            }
+        #, "pyspark_bin": "spark-submit"
+        , "pyspark_bin": "pyspark"
+        , "options": {
+            "--master": "yarn-client"
+            , "--num-executors": 20
+            , "--executor-memory": "32G"
+            , "--executor-cores":5
+            , "--driver-memory": "32G"
+            , "--conf": {
+                "spark.driver.maxResultSize": "32G"
+                , "spark.kryoserializer.buffer.max":2047
+                , "spark.yarn.executor.memoryOverhead": 5000
+                , "spark.executor.memory": "6G"
+                , "spark.cores.max": 200
+                , "spark.network.timeout":"600s"
+                , "spark.shuffle.registration.timeout":"60000"
+                # to use RPC timeout and shuffle timeout
+                }
+            }
+    },
+    # input and output locations
+	"input": {
+        "claim": "ts_pdppndoph_nogbd_r000_ou.PROF_FINAL_REPORT"
+        # currently distance is read in from csv file
+       , "distance": "ts_pdppndoph_nogbd_r000_sg.zip_distance"
+    },
+    "intermediate_db_name": "ts_pdppndoph_nogbd_r000_sg",	
+    "output_db_name": "ts_pdppndoph_nogbd_r000_ou",
+    "output_table_name": "API_PROF_REFERRAL",
+    # Parameters
+    # rule weight used in the claim count
+    "rule_weight":{
+      "time": 0.351
+      , "space": 0.277
+      , "diag": 0.256
+      , "org": 0.116
+    },
+    # input the total referral rate, i.e., (implicit+ explicit)/tot_claim_cnt as a parameter
+    # obtained from highest referral rate on (state, lob, prod) level, HMO=0.429, PPO=0.396
+    "tot_ref_rate": 0.4,
+    # PCP definition
+    "PCP": ["Internal Medicine", "Family Practice", "General Practice", "Pediatric Medicine"]
+}
